@@ -47,18 +47,27 @@ class Envelope {
     };
 
     static delete(name) {
+        const idx = Envelope.index(name);
+        if (envelopes[idx].budget === 0) {
+            envelopes.splice(idx, 1);
+            return true;
+        } else {
+            throw new Error('Envelope not empty!');
+        };
+    };
+
+    static select(name) {
+        return envelopes[Envelope.index(name)];
+    };
+
+    static index(name) {
         const names = envelopes.map(envelope => envelope.name);
-        const index = names.indexOf(name);
-        if (index  >  -1) {
-            if (envelopes[index].budget === 0) {
-                envelopes.splice(index, 1);
-                return true;
-            } else {
-                throw new Error('Envelope not empty!');
-            }
+        const idx = names.indexOf(name);
+        if (idx  >  -1) {
+            return idx;
         } else {
             throw new Error('Envelope does not exist!');
-        }
+        };
     };
 };
     

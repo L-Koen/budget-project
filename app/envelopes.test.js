@@ -39,6 +39,14 @@ describe('Test envelope Class', () => {
         expect(() => {Envelope.delete('test')}).toThrow('Envelope does not exist!');
         expect(() => {Envelope.delete('test1')}).toThrow('Envelope not empty!');
     });
+
+    it('should be possible to select an envelope by name', () => {
+        expect(Envelope.select('test1')).toBe(envelopes[envelopes.length -1]);
+        const test1 = Envelope.select('test1')
+        test1.budget = 0;
+        expect(Envelope.delete('test1')).toBe(true);
+        expect(() => {Envelope.select('test1')}).toThrow('Envelope does not exist!');
+    })
 });
 
 describe('envelopes array', () => {
