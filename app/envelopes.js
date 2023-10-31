@@ -5,7 +5,7 @@ const envelopes = [];
 class Envelope {
     constructor(name, initialBudget) {
         this.name = name;
-        this._budget = initialBudget || 0;
+        this.budget = initialBudget || 0;
         this.id = envelopes.length;
         envelopes.push(this);
     };
@@ -25,19 +25,41 @@ class Envelope {
     };
 
     withdraw(amount) {
-        this._budget = this._budget - amount;
-        return this._budget;
+        this.budget = this.budget - amount;
+        return this.budget;
     };
 
     fund(amount) {
-        this._budget = this._budget + amount;
-        return this._budget;
+        this.budget = this.budget + amount;
+        return this.budget;
     };
 
     get budget() {
         return this._budget;
-    }
+    };
 
+    set budget(newBudget) {
+        if (newBudget >= 0) {
+            this._budget = newBudget;
+        } else {
+            throw new Error('Not enough budget!');
+        };
+    };
+
+    static delete(name) {
+        const names = envelopes.map(envelope => envelope.name);
+        const index = names.indexOf(name);
+        if (index  >  -1) {
+            if (envelopes[index].budget === 0) {
+                envelopes.splice(index, 1);
+                return true;
+            } else {
+                throw new Error('Envelope not empty!');
+            }
+        } else {
+            throw new Error('Envelope does not exist!');
+        }
+    };
 };
     
 
