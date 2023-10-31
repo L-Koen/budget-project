@@ -20,7 +20,7 @@ RUN adduser -S -G user  -u $USER_ID user
 USER user
 WORKDIR /usr/src/app
 
-COPY ./app/package*.json ./
+COPY --chown=user:user ./app/package*.json .
 
 RUN npm install
 

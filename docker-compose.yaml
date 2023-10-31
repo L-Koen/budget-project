@@ -1,11 +1,20 @@
+secrets:
+  passwd:
+    file: ./passwd.txt
+
 services:
   app:
     environment:
       - NODE_ENV=development
+      - DOCKER_BUILDKIT=1
+      - passwd=/run/secrets/passwd
     build: .
     container_name: node-dev-container
-    command: npm run dev
+    command: npm test
     ports:
       - 8080:80
     volumes:
       - ./app:/usr/src/app
+    secrets:
+      - passwd
+
