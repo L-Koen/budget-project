@@ -51,7 +51,15 @@ describe('Test envelope Class', () => {
 
 describe('envelopes array', () => {
     it('exists', () => {
-        expect(envelopes.length > 1);
+        expect(envelopes.length > 0);
+    });
+
+    it('contains 4 example envelopes', () => {
+        expect(envelopes.map(envelope => envelope.name)).toEqual(['home', 'hobby', 'food', 'transport']);
+    });
+
+    it('has some inial budget attributed', () => {
+        expect(envelopes.map(envelope => envelope.budget)).toEqual([300, 200, 800, 200]);
     });
     
 })  

@@ -70,7 +70,12 @@ class Envelope {
         };
     };
 };
-    
+
+// initialize some envelopes as example
+new Envelope('home', 300);
+new Envelope('hobby', 200);
+new Envelope('food', 800);
+new Envelope('transport', 200);
 
 
 module.exports = { envelopes, Envelope };
