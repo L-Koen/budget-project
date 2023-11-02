@@ -35,18 +35,25 @@ describe('Test envelope Class', () => {
     });
 
     it('should be possible to delete an empty envelope by name', () => {
-        expect(Envelope.delete('test')).toBe(true);
-        expect(() => {Envelope.delete('test')}).toThrow('Envelope does not exist!');
-        expect(() => {Envelope.delete('test1')}).toThrow('Envelope not empty!');
+        expect(Envelope.nameDelete('test')).toBe(true);
+        expect(() => {Envelope.nameDelete('test')}).toThrow('Envelope does not exist!');
+        expect(() => {Envelope.nameDelete('test1')}).toThrow('Envelope not empty!');
     });
 
     it('should be possible to select an envelope by name', () => {
-        expect(Envelope.select('test1')).toBe(envelopes[envelopes.length -1]);
-        const test1 = Envelope.select('test1')
+        expect(Envelope.selectName('test1')).toBe(envelopes[envelopes.length -1]);
+        const test1 = Envelope.selectName('test1')
         test1.budget = 0;
-        expect(Envelope.delete('test1')).toBe(true);
-        expect(() => {Envelope.select('test1')}).toThrow('Envelope does not exist!');
-    })
+        expect(Envelope.nameDelete('test1')).toBe(true);
+        expect(() => {Envelope.selectName('test1')}).toThrow('Envelope does not exist!');
+    });
+
+    it('is possible to select envelopes by id', () => {
+        for (const envelope of envelopes) {
+            expect(Envelope.selectId(envelope.id)).toBe(envelope);
+        }
+        expect(() => {Envelope.selectId(1000)}).toThrow('Envelope does not exist!');
+    });
 });
 
 describe('envelopes array', () => {

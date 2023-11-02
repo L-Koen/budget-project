@@ -6,7 +6,7 @@ class Envelope {
     constructor(name, initialBudget) {
         this.name = name;
         this.budget = initialBudget || 0;
-        this.id = envelopes.length;
+        this.id = Envelope.newId();
         envelopes.push(this);
     };
 
@@ -46,8 +46,8 @@ class Envelope {
         };
     };
 
-    static delete(name) {
-        const idx = Envelope.index(name);
+    static nameDelete(name) {
+        const idx = Envelope.nameIndex(name);
         if (envelopes[idx].budget === 0) {
             envelopes.splice(idx, 1);
             return true;
@@ -56,17 +56,45 @@ class Envelope {
         };
     };
 
-    static select(name) {
-        return envelopes[Envelope.index(name)];
+    static selectName(name) {
+        return envelopes[Envelope.nameIndex(name)];
     };
 
-    static index(name) {
+    static nameIndex(name) {
         const names = envelopes.map(envelope => envelope.name);
         const idx = names.indexOf(name);
         if (idx  >  -1) {
             return idx;
         } else {
             throw new Error('Envelope does not exist!');
+        };
+    };
+
+    static idIndex(id) {
+        const ids = envelopes.map(envelope => envelope.id);
+        const idx = ids.indexOf(id);
+        if (idx  >  -1) {
+            return idx;
+        } else {
+            throw new Error('Envelope does not exist!');
+        };
+    };
+
+    static selectId(id) {
+        return envelopes[Envelope.idIndex(id)];
+    };
+
+    static newId() {
+        let id = 0;
+        let found = false
+        while (!found) {
+            try {
+                Envelope.idIndex(id);
+            } catch(e) {
+                found = true
+                return id;
+            }; 
+            id++;
         };
     };
 };
