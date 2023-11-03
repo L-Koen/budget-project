@@ -54,6 +54,15 @@ describe('Test envelope Class', () => {
         }
         expect(() => {Envelope.selectId(1000)}).toThrow('Envelope does not exist!');
     });
+
+    it('has a makePublic method', () => {
+        for (const envelope of envelopes) {
+            const publicEnvelope = envelope.makePublic();
+            expect(publicEnvelope.id).toEqual(envelope.id);
+            expect(publicEnvelope.name).toEqual(envelope.name);
+            expect(publicEnvelope.budget).toEqual(envelope.budget);
+        }
+    });
 });
 
 describe('envelopes array', () => {

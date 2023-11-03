@@ -46,6 +46,11 @@ class Envelope {
         };
     };
 
+    makePublic() {
+        const output = {id: this.id, name: this.name, budget: this.budget};
+        return output;
+    };
+
     static nameDelete(name) {
         const idx = Envelope.nameIndex(name);
         if (envelopes[idx].budget === 0) {

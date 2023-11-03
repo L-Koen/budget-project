@@ -6,10 +6,48 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 
-function makePublic(envelope) {
-    const output = {id: envelope.id, name: envelope.name, budget: envelope.budget};
-    return output;
+const validateEnvelope = (req, res, next) => {
+    console.log('validating');
+    const newName = req.body.name;
+    req.newEnvelope = {};
+    if (newName != req.envelope.name) {
+        try {
+            const nameIdx = Envelope.nameIndex(newName);
+        } catch (e) {
+            req.newEnvelope.name = newName;
+        }
+        if (!req.newEnvelope.name) {
+            err = new Error('Name already exists!');
+            err.status = 400;
+            next(err);
+        };       
+    } else {
+        req.newEnvelope.name = newName;
+    };
+    
+    const newBudget = Number(req.body.budget);
+    if (newBudget >= 0 && !Number.isNaN(newBudget)) {
+        req.newEnvelope.budget = newBudget;
+        next();
+    } else {
+        err = new Error('Budget is invalid!');
+        err.status = 400;
+        next(err);
+    };
 };
+
+app.param('id', (req, res, next, id) => {
+    let envId = Number(id);
+    try {
+        const idx = Envelope.idIndex(envId);
+    } catch (e) {
+        e.status = 404;
+        next(e);
+    };
+    req.envId = envId;
+    req.envelope = Envelope.selectId(envId).makePublic();
+    next();
+});
 
 app.get('/', (req, res, next) => {
     res.send('Hello World');
@@ -20,24 +58,21 @@ app.get('/envelopes', (req, res, next) => {
 });
 
 app.get('/envelopes/:id', (req, res, next) => {
-    const id = Number(req.params.id);
-    if (id >= 0 && id < envelopes.length && Number.isInteger(id)) {
-        res.json(Envelope.selectId(id));
-    } else {
-        res.status(404).send('Envelope not found!');
-    };
+    res.json(req.envelope);
 })
 
-app.put('/envelopes/:id', (req, res, next) => {
-    const id = Number(req.params.id);
-    if (id >= 0 && id < envelopes.length && Number.isInteger(id)) {
-        const envelope = Envelope.selectId(id);
-        envelope.budget = req.body.budget;
-        envelope.name = req.body.name;
-        res.json(makePublic(envelope));
-    } else {
-        res.status(404).send('Envelope not found!');
+app.put('/envelopes/:id', validateEnvelope, (req, res, next) => {
+    const envelope = Envelope.selectId(req.envId);
+    envelope.budget = req.newEnvelope.budget;
+    if (envelope.name != req.newEnvelope.name) {
+        envelope.name = req.newEnvelope.name;
     };
-})
+    res.json(envelope.makePublic());
+});
+
+app.use((err, req, res, next) => {
+    const status = err.status || 500;
+    res.status(status).send(err.message);
+});
 
 module.exports = app;
