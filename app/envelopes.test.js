@@ -55,6 +55,13 @@ describe('Test envelope Class', () => {
         expect(() => {Envelope.selectId(1000)}).toThrow('Envelope does not exist!');
     });
 
+    it('is possible to delete envelopes by id', () => {
+        const test1 = new Envelope('test1', 100);
+        expect(() => {Envelope.idDelete(test1.id)}).toThrow('Envelope not empty!');
+        Envelope.selectId(test1.id).budget = 0
+        expect(Envelope.idDelete(test1.id)).toBe(true);
+    });
+
     it('has a makePublic method', () => {
         for (const envelope of envelopes) {
             const publicEnvelope = envelope.makePublic();

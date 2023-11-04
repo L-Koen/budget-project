@@ -102,6 +102,16 @@ class Envelope {
             id++;
         };
     };
+
+    static idDelete(id) {
+        const idx = Envelope.idIndex(id);
+        if (envelopes[idx].budget === 0) {
+            envelopes.splice(idx, 1);
+            return true;
+        } else {
+            throw new Error('Envelope not empty!');
+        };
+    };
 };
 
 // initialize some envelopes as example
